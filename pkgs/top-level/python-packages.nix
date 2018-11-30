@@ -288,6 +288,8 @@ in {
 
   cdecimal = callPackage ../development/python-modules/cdecimal { };
 
+  chalice = callPackage ../development/python-modules/chalice { };
+
   clustershell = callPackage ../development/python-modules/clustershell { };
 
   cozy = callPackage ../development/python-modules/cozy { };
@@ -3057,6 +3059,8 @@ in {
   nose-cov = callPackage ../development/python-modules/nose-cov { };
 
   nose-exclude = callPackage ../development/python-modules/nose-exclude { };
+
+  nose-randomly = callPackage ../development/python-modules/nose-randomly { };
 
   nose2 = callPackage ../development/python-modules/nose2 { };
 
