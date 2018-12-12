@@ -1,9 +1,17 @@
 { lib, stdenv, fetchgit, python3Packages,
   diffoscope,
+  glibcLocales,
   libfaketime, disorderfs,
-  coreutils, utillinux, bash,
+  hostname, nettools, coreutils, utillinux, bash, fuse,
   docutils, help2man,
 }:
+
+let locales = glibcLocales.override {
+  allLocales = false;
+  allowUnsupportedLocales = true;
+  # see corresponding list of locales in reprotest/build.py
+  locales = ["fr_CH.UTF-8/UTF-8" "es_ES/ISO-8859-1" "ru_RU.CP1251/CP1251" "kk_KZ.RK1048/RK1048" "zh_CN/UTF-8"];
+  }; in
 
 python3Packages.buildPythonApplication rec {
   name = "reprotest-${version}";
@@ -32,11 +40,15 @@ python3Packages.buildPythonApplication rec {
     python3Packages.python_magic
     diffoscope
     # run-time dependencies
+    locales
+    hostname
+    nettools
     libfaketime
     disorderfs
     coreutils
     bash
     utillinux
+    fuse
   ];
 
   nativeBuildInputs = [ docutils help2man ];

@@ -7,7 +7,7 @@
 */
 
 { stdenv, buildPackages, callPackage, writeText
-, allLocales ? true, locales ? [ "en_US.UTF-8/UTF-8" ]
+, allLocales ? true, allowUnsupportedLocales ? false, locales ? [ "en_US.UTF-8/UTF-8" ]
 }:
 
 callPackage ./common.nix { inherit stdenv; } {
@@ -31,7 +31,7 @@ callPackage ./common.nix { inherit stdenv; } {
       # Hack to allow building of the locales (needed since glibc-2.12)
       sed -i -e 's,^$(rtld-prefix) $(common-objpfx)locale/localedef,localedef --prefix='$TMPDIR',' ../glibc-2*/localedata/Makefile
     ''
-      + stdenv.lib.optionalString (!allLocales) ''
+      + stdenv.lib.optionalString (!allLocales && !allowUnsupportedLocales) ''
       # Check that all locales to be built are supported
       echo -n '${stdenv.lib.concatMapStrings (s: s + " \\\n") locales}' \
         | sort > locales-to-build.txt
@@ -46,7 +46,7 @@ callPackage ./common.nix { inherit stdenv; } {
         echo "You should choose from the list above the error."
         false
       fi
-
+    '' + stdenv.lib.optionalString (!allLocales) ''
       echo SUPPORTED-LOCALES='${toString locales}' > ../glibc-2*/localedata/SUPPORTED
     '' + ''
       make localedata/install-locales \
