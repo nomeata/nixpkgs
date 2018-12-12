@@ -63,6 +63,10 @@ python3Packages.buildPythonApplication rec {
     cp doc/reprotest.1 $out/share/man/man1/reprotest.1
   '';
 
+  makeWrapperArgs = [
+    "--set LOCALE_ARCHIVE ${locales}/lib/locale/locale-archive"
+  ];
+
   meta = with stdenv.lib; {
     description = "Build software and check it for reproducibility";
     longDescription = ''
