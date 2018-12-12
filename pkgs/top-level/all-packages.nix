@@ -5173,6 +5173,8 @@ in
 
   reposurgeon = callPackage ../applications/version-management/reposurgeon { };
 
+  reprotest = callPackage ../tools/misc/reprotest { };
+
   reptyr = callPackage ../os-specific/linux/reptyr {};
 
   rescuetime = callPackage ../applications/misc/rescuetime { };

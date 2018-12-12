@@ -4534,6 +4534,8 @@ in {
 
   rpdb = callPackage ../development/python-modules/rpdb { };
 
+  rstr = callPackage ../development/python-modules/rstr { };
+
   grequests = callPackage ../development/python-modules/grequests { };
 
   first = callPackage ../development/python-modules/first {};

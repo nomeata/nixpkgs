@@ -3,18 +3,19 @@
 , fetchPypi
 , pytest
 , pkgs
+, mock
 }:
 
 buildPythonPackage rec {
   pname = "libarchive-c";
-  version = "2.7";
+  version = "2.8";
 
   src = fetchPypi {
     inherit pname version;
-    sha256 = "011bfsmqpcwd6920kckllh7zhw2y4rrasgmddb7wjzn2hg1xpsjn";
+    sha256 = "0qg0v1s9c1xdk9philhnv8k6c6nicvnvfwlc0j9srg90jmdlvm06";
   };
 
-  buildInputs = [ pytest pkgs.glibcLocales ];
+  buildInputs = [ pytest pkgs.glibcLocales mock ];
 
   LC_ALL="en_US.UTF-8";
 
