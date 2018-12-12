@@ -1,6 +1,7 @@
 { lib, stdenv, fetchgit, python3Packages,
   diffoscope,
   libfaketime, disorderfs,
+  coreutils, utillinux, bash,
   docutils, help2man,
 }:
 
@@ -28,6 +29,9 @@ python3Packages.buildPythonApplication rec {
     # run-time dependencies
     libfaketime
     disorderfs
+    coreutils
+    bash
+    utillinux
   ];
 
   nativeBuildInputs = [ docutils help2man ];
