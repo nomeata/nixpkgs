@@ -15,13 +15,18 @@ python3Packages.buildPythonApplication rec {
     sha256 = "1g67r7srb551hqwpn5gmx1si7j190zb46gh56x3amljq1h3lalir";
   };
 
+  patches = [
+    ./0001-Do-not-record-system-architecture.patch
+    ./0002-Default-to-system-interface-nix-no-use-of-dpkg.patch
+  ];
+
+
   postPatch = ''
     # When generating manpage, use the installed version
     substituteInPlace doc/Makefile --replace "../bin" "$out/bin"
   '';
 
   propagatedBuildInputs = [
-    python3Packages.distro
     python3Packages.rstr
     python3Packages.libarchive-c
     python3Packages.python_magic

@@ -1,0 +1,122 @@
+From 40e6a232c97d7b61bdeccf05f548e545497a6928 Mon Sep 17 00:00:00 2001
+From: Joachim Breitner <mail@joachim-breitner.de>
+Date: Wed, 12 Dec 2018 14:34:08 +0100
+Subject: [PATCH 2/2] =?UTF-8?q?Default=20to=20system=20interface=20?=
+ =?UTF-8?q?=E2=80=9Cnix=E2=80=9D=20(no=20use=20of=20dpkg)?=
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+---
+ reprotest/lib/adt_testbed.py          | 12 ++++-----
+ reprotest/lib/system_interface/nix.py | 36 +++++++++++++++++++++++++++
+ setup.py                              |  1 -
+ 3 files changed, 42 insertions(+), 7 deletions(-)
+ create mode 100644 reprotest/lib/system_interface/nix.py
+
+diff --git a/reprotest/lib/adt_testbed.py b/reprotest/lib/adt_testbed.py
+index 3b7426f..d68826a 100644
+--- a/reprotest/lib/adt_testbed.py
++++ b/reprotest/lib/adt_testbed.py
+@@ -31,7 +31,6 @@ import signal
+ import subprocess
+ import tempfile
+ import shutil
+-import distro
+ import urllib.parse
+ 
+ # Don't need this in reprotest, try to be distro-agnostic
+@@ -39,12 +38,14 @@ import urllib.parse
+ 
+ from reprotest.lib.system_interface.debian import DebianInterface
+ from reprotest.lib.system_interface.arch import ArchInterface
++from reprotest.lib.system_interface.nix import NixInterface
+ from reprotest.lib import adtlog
+ from reprotest.lib import VirtSubproc
+ 
+ SYSTEM_INTERFACES = {
+         'debian': DebianInterface,
+-        'arch': ArchInterface
++        'arch': ArchInterface,
++        'nix': NixInterface
+         }
+ 
+ timeouts = {'short': 100, 'copy': 300, 'install': 3000, 'test': 10000,
+@@ -90,8 +91,7 @@ class Testbed:
+ 
+ 
+         if not host_distro:
+-            host_distro = distro.id()
+-            adtlog.info("Tried distro auto-detection, got %r" % host_distro)
++            host_distro = 'nix'
+ 
+         if host_distro in SYSTEM_INTERFACES:
+             self.system_interface = SYSTEM_INTERFACES[host_distro]()
+@@ -99,8 +99,8 @@ class Testbed:
+             # The host_distro provided is not available.
+             # Let's play it cool
+             adtlog.warning("Could not load target distro keychain. "
+-                "Falling back to Debian")
+-            self.system_interface = DebianInterface()
++                "Falling back to Nix")
++            self.system_interface = NixInterface()
+ 
+         adtlog.debug('testbed init')
+ 
+diff --git a/reprotest/lib/system_interface/nix.py b/reprotest/lib/system_interface/nix.py
+new file mode 100644
+index 0000000..9e7ddaa
+--- /dev/null
++++ b/reprotest/lib/system_interface/nix.py
+@@ -0,0 +1,36 @@
++# adt_testbed.py is part of autopkgtest
++# autopkgtest is a tool for testing Debian binary packages. The
++# system_interface module is an addition for reprotest to make
++# this module distro-agnostic
++#
++# autopkgtest is Copyright (C) 2006-2015 Canonical Ltd.
++# the system_interface module is Copyright (C) 2017 Santiago Torres-Arias
++#
++# This program is free software; you can redistribute it and/or modify
++# it under the terms of the GNU General Public License as published by
++# the Free Software Foundation; either version 2 of the License, or
++# (at your option) any later version.
++#
++# This program is distributed in the hope that it will be useful,
++# but WITHOUT ANY WARRANTY; without even the implied warranty of
++# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++# GNU General Public License for more details.
++#
++# You should have received a copy of the GNU General Public License
++# along with this program; if not, write to the Free Software
++# Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
++#
++# See the file CREDITS for a full list of credits information (often
++# installed as /usr/share/doc/autopkgtest/CREDITS).
++import subprocess
++
++from . import SystemInterface
++
++
++class NixInterface(SystemInterface):
++    """
++        SystemInterface implementation for Nix environments.
++    """
++
++    def can_query_packages(self):
++        return 0
+diff --git a/setup.py b/setup.py
+index 4755f13..b03f868 100644
+--- a/setup.py
++++ b/setup.py
+@@ -22,7 +22,6 @@ setup(name='reprotest',
+       install_requires=[
+           'diffoscope',
+           'rstr',
+-          'distro',
+           ],
+       classifiers=[
+           'Development Status :: 3 - Alpha',
+-- 
+2.20.0.rc2
+
