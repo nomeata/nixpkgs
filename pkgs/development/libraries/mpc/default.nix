@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   name = "mpc-1.0.1";
 
   src = fetchurl {
-    url = "http://www.multiprecision.org/mpc/download/${name}.tar.gz";
+    url = "https://ftp.gnu.org/gnu/mpc/${name}.tar.gz";
     sha1 = "vxg0rkyn4cs40wr2cp6bbcyr1nnijzlc";
   };
 
