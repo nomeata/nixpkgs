@@ -4,7 +4,7 @@ stdenv.mkDerivation rec {
   name = "mpc-1.0.1";
 
   src = fetchurl {
-    url = "https://ftp.gnu.org/gnu/mpc/${name}.tar.gz";
+    url = "http://ftp.gnu.org/gnu/mpc/${name}.tar.gz";
     sha1 = "vxg0rkyn4cs40wr2cp6bbcyr1nnijzlc";
   };
 
